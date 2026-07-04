@@ -1,0 +1,26 @@
+data:
+  raw_path: data/raw/AEP_hourly.csv
+  target_col: AEP_MW
+  datetime_col: Datetime
+  value_min: 1000      # sanity floor (MW)
+  value_max: 60000     # sanity ceiling (MW)
+
+features:
+  lags: [24, 48, 168]             # 1 day, 2 days, 1 week
+  rolling_windows: [24, 168]      # rolling mean/std windows (hours)
+  cyclical: true                  # add sin/cos encodings for hour, dayofweek, month
+
+train:
+  test_year_fraction: 0.15        # final fraction held out as test
+  cv_splits: 4                    # expanding-window TS-CV folds
+  model:
+    n_estimators: 600
+    learning_rate: 0.05
+    num_leaves: 64
+    subsample: 0.8
+    colsample_bytree: 0.8
+    random_state: 42
+  smoke_test: false               # CI sets true to train tiny + fast
+
+evaluate:
+  plot: true                      # save predicted-vs-actual and residual plots

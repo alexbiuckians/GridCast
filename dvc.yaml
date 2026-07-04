@@ -1,0 +1,63 @@
+stages:
+  ingest:
+    cmd: python -m src.ingest
+    deps:
+      - src/ingest.py
+      - data/raw/AEP_hourly.csv
+    params:
+      - data
+    outs:
+      - data/interim/ingested.parquet
+
+  clean:
+    cmd: python -m src.clean
+    deps:
+      - src/clean.py
+      - data/interim/ingested.parquet
+    params:
+      - data
+    outs:
+      - data/interim/clean.parquet
+
+  features:
+    cmd: python -m src.features
+    deps:
+      - src/features.py
+      - data/interim/clean.parquet
+    params:
+      - data
+      - features
+    outs:
+      - data/processed/features.parquet
+
+  train:
+    cmd: python -m src.train
+    deps:
+      - src/train.py
+      - data/processed/features.parquet
+    params:
+      - data
+      - train
+    outs:
+      - models/model.txt
+      - models/features.json
+
+  evaluate:
+    cmd: python -m src.evaluate
+    deps:
+      - src/evaluate.py
+      - src/baseline.py
+      - models/model.txt
+      - data/processed/features.parquet
+    params:
+      - data
+      - train
+      - evaluate
+    metrics:
+      - metrics.json:
+          cache: false
+    plots:
+      - reports/figures/pred_vs_actual.png:
+          cache: false
+      - reports/figures/residuals.png:
+          cache: false
