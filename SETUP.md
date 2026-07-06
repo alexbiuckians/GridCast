@@ -21,23 +21,7 @@ cat metrics.json
 Expected: model **~2.7% MAPE** vs seasonal-naive **~9.5% MAPE**, skill score **~0.72**.
 Plots are written to `reports/figures/`.
 
-## 3. Initialize DVC
-
-```bash
-git init && dvc init
-dvc add data/raw/AEP_hourly.csv
-git add data/raw/AEP_hourly.csv.dvc data/raw/.gitignore .dvc
-dvc repro
-dvc metrics show
-```
-
-Optional remote (off-machine data versioning):
-```bash
-dvc remote add -d storage s3://your-bucket/dvc   # or gdrive://, azure://, etc.
-dvc push
-```
-
-## 4. Experiment tracking
+## 3. Experiment tracking
 
 ```bash
 mlflow ui      # http://localhost:5000
@@ -47,7 +31,7 @@ Each `train` run logs hyperparameters, per-fold CV MAE, mean/std CV MAE, and the
 artifact. Edit `params.yaml` (lags, windows, model hyperparameters) and re-run
 `python -m src.train` to generate comparable runs.
 
-## 5. Serve the model
+## 4. Serve the model
 
 ```bash
 uvicorn src.serve:app --reload
@@ -60,14 +44,14 @@ docker build -t aep-load-api .
 docker run -p 8000:8000 aep-load-api
 ```
 
-## 6. Tests & lint (what CI runs)
+## 5. Tests & lint (what CI runs)
 
 ```bash
 ruff check src tests
 pytest -q
 ```
 
-## 7. Push to GitHub
+## 6. Push to GitHub
 
 ```bash
 git add .

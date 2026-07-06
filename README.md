@@ -1,12 +1,12 @@
 # GridCast — Hourly Electricity Load Forecasting (MLOps)
 
-> Hourly electricity demand forecasting that beats a seasonal-naive baseline by 72% (2.7% MAPE) — reproducible MLOps pipeline with DVC, MLflow, and a feature-engineering FastAPI service.
+> Hourly electricity demand forecasting that beats a seasonal-naive baseline by 72% (2.7% MAPE) — reproducible MLOps pipeline with MLflow and a feature-engineering FastAPI service.
 
-End-to-end, **reproducible, served** machine-learning system that forecasts hourly electricity demand (megawatts) for the AEP region of the PJM grid. The emphasis is **production engineering**: data versioning, experiment tracking, a reproducible multi-stage pipeline, an honest baseline, automated tests, CI, and a deployable API that performs its own feature engineering so training and serving share one code path.
+End-to-end, **reproducible, served** machine-learning system that forecasts hourly electricity demand (megawatts) for the AEP region of the PJM grid. The emphasis is **production engineering**: experiment tracking, a reproducible multi-stage pipeline, an honest baseline, automated tests, CI, and a deployable API that performs its own feature engineering so training and serving share one code path.
 
 | Concern | Tool |
 |---|---|
-| Pipeline | Multi-stage: ingest → clean → features → train → evaluate 
+| Pipeline | Multi-stage: ingest → clean → features → train → evaluate |
 | Experiment tracking | **MLflow** (params, per-fold metrics, artifacts per run) |
 | Modeling | LightGBM, expanding-window time-series cross-validation |
 | Honest benchmark | Seasonal-naive baseline + **skill score**|
@@ -32,7 +32,7 @@ On a held-out final period (18,169 hours), the model beats the trivial benchmark
 Forecast hourly load from a univariate series (`Datetime`, `AEP_MW`). Short-term load forecasting is an operational function at utilities, ISOs/RTOs, and energy traders. The raw series has two columns; predictive signal is **engineered** from calendar structure (including cyclical encodings and US holidays) and the series' own lagged history — two raw columns become 21 features.
 
 
-## Pipeline stages (DVC DAG)
+## Pipeline stages 
 
 ```
 ingest -> clean -> features -> train -> evaluate
@@ -98,15 +98,8 @@ python -m src.ingest && python -m src.clean && python -m src.features \
 cat metrics.json
 ```
 
-Or run  the stages directly:
 
-``` bash
-python -m src.ingest && python -m src.clean && python -m src.features \
-  && python -m src.train && python -m src.evaluate
-cat metrics.json
-```
-
-See `SETUP.md` for full git/DVC/MLflow initialization and push instructions.
+See `SETUP.md` for full git and MLflow initialization and push instructions.
 
 ## Tests & CI
 ``` bash
