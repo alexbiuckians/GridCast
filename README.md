@@ -4,6 +4,8 @@
 
 End-to-end, **reproducible, served** machine-learning system that forecasts hourly electricity demand (megawatts) for the AEP region of the PJM grid. The emphasis is **production engineering**: experiment tracking, a reproducible multi-stage pipeline, an honest baseline, automated tests, CI, and a deployable API that performs its own feature engineering so training and serving share one code path.
 
+Dataset: https://www.kaggle.com/datasets/robikscube/hourly-energy-consumption
+
 | Concern | Tool |
 |---|---|
 | Pipeline | Multi-stage: ingest → clean → features → train → evaluate |
